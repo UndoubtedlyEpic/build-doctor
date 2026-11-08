@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Send in your Path of Exile 2 build: measured in Path of Building 2, fixed within your budget, graded against top players, reviewed live in the eH_PiC Discord.">
+<meta property="og:title" content="eH_PiC Build Doctor">
+<meta property="og:description" content="Send in your PoE2 build: measured, fixed and graded, then reviewed live.">
+<meta property="og:image" content="https://undoubtedlyepic.github.io/build-doctor/ehpic_banner.jpg">
+<meta name="theme-color" content="#b66bff">
+<title>eH_PiC Build Doctor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@1,700;1,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column under the eH_PiC banner. Colours are the channel's (theme/ehpic.css, taken from the banner):
+   near-black, deep violet shadows, neon violet accent, hot pink-violet highlight, lavender-white type. Single dark look. */
+:root {
+  --bg: #06030c;
+  --panel: #0e0818;
+  --panel-2: #160d26;
+  --line: #2b1b4a;
+  --line-2: #44286f;
+  --fg: #ebe6f8;
+  --muted: #9b91b8;
+  --soft: #cdbfee;
+  --acc: #b66bff;
+  --hot: #da74f9;
+  --on-acc: #ffffff;
+  --glow: rgba(168, 85, 255, 0.38);
+  --ok: #4fe3a1;
+  --warn: #f2c94c;
+  --low: #ff5c7c;
+  --gB: #a6e36a;
+  --gD: #ff9f5a;
+  --display: "Barlow Semi Condensed", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--bg); }
+body {
+  margin: 0; color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6;
+  background:
+    radial-gradient(1100px 560px at 88% -8%, rgba(120, 50, 220, 0.22), transparent 62%),
+    radial-gradient(900px 520px at -8% 112%, rgba(86, 28, 176, 0.20), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+main { max-width: 800px; margin: 0 auto; padding-block: 24px 72px; display: flex; flex-direction: column; gap: 60px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; font-style: italic; text-transform: uppercase; letter-spacing: 0.03em; }
+h1 {
+  font-size: clamp(2.2rem, 7vw, 3.6rem); line-height: 1.0; font-weight: 800;
+  background: linear-gradient(180deg, #ffffff 8%, #e6dcff 55%, #b98cff 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 14px rgba(168, 85, 255, 0.55));
+}
+h2 { font-size: 1.7rem; font-weight: 700; line-height: 1.15; color: var(--fg); display: flex; align-items: center; gap: 12px; }
+h2::before { content: ""; width: 26px; height: 10px; flex: none; background: repeating-linear-gradient(115deg, var(--acc) 0 4px, transparent 4px 7px); filter: drop-shadow(0 0 4px var(--glow)); }
+.eyebrow { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hot); }
+.lede { color: var(--soft); font-size: 1.1rem; max-width: 56ch; margin: 0; text-shadow: 0 1px 8px #000; }
+header {
+  position: relative; display: flex; flex-direction: column; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden;
+  background: linear-gradient(180deg, #0b0616 0%, #06030c 100%);
+  box-shadow: 0 1px 0 rgba(182, 107, 255, 0.25), 0 12px 40px rgba(60, 10, 140, 0.35);
+}
+.banner { display: block; width: 100%; max-width: 100%; height: auto; aspect-ratio: 16 / 6.2; object-fit: cover; object-position: 50% 46%;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%); mask-image: linear-gradient(180deg, #000 70%, transparent 100%); }
+.hero { display: flex; flex-direction: column; gap: 18px; padding: 4px clamp(18px, 4vw, 36px) 40px; margin-top: -8px; position: relative; }
+header::before, header::after { content: ""; position: absolute; width: 46px; height: 30px; pointer-events: none; border: 1px solid rgba(182, 107, 255, 0.6); }
+header::before { left: 12px; top: 12px; border-right: none; border-bottom: none; }
+header::after { right: 12px; bottom: 12px; border-left: none; border-top: none; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-top: 6px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; color: var(--on-acc); font-weight: 600; font-size: 1.05rem; text-decoration: none;
+  padding: 13px 24px; border-radius: 4px; border: 1px solid #c18bff; text-shadow: 0 1px 6px rgba(40, 0, 90, 0.9);
+  background: linear-gradient(180deg, #8a4cf7 0%, #5b25c9 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 0 16px rgba(130, 60, 240, 0.45);
+}
+.btn:hover { background: linear-gradient(180deg, #9d63ff 0%, #6c33dd 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 24px rgba(168, 85, 255, 0.7); }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line-2); text-shadow: none; box-shadow: none; }
+.btn.ghost:hover { border-color: var(--acc); box-shadow: 0 0 16px var(--glow); }
+.actions .small { color: var(--soft); font-size: 0.92rem; text-shadow: 0 1px 8px #000; }
+section { display: flex; flex-direction: column; gap: 18px; scroll-margin-top: 16px; }
+section > p { margin: 0; max-width: 65ch; }
+.panel, .ready li, .blind div, .form, .consent {
+  position: relative; background: linear-gradient(180deg, #130b22 0%, #0d0717 100%); border: 1px solid var(--line); border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.form::before, .consent::before { content: ""; position: absolute; top: -1px; left: 16px; width: 52px; height: 2px; background: var(--acc); box-shadow: 0 0 12px var(--acc), 0 0 2px #fff; }
+.ready { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 12px; }
+.ready li { padding: 14px 16px; display: grid; grid-template-columns: 22px 1fr; gap: 12px; min-width: 0; }
+.ready li::before { content: ""; width: 16px; height: 16px; border: 1.5px solid var(--acc); border-radius: 2px; margin-top: 5px; box-shadow: 0 0 8px var(--glow); }
+.ready b { color: var(--fg); font-weight: 600; display: block; }
+.ready span { color: var(--muted); font-size: 0.95rem; }
+.ready .opt { display: block; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hot); margin: 1px 0 2px; }
+ol.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; counter-reset: s; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 2.4rem 1fr; gap: 14px; align-items: start; }
+ol.steps li::before { content: counter(s); font-family: var(--mono); color: var(--fg); border: 1px solid var(--acc); border-radius: 50%; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; font-size: 0.95rem; box-shadow: 0 0 10px var(--glow); background: var(--panel); }
+ol.steps strong { color: var(--fg); }
+ol.steps p { margin: 0; min-width: 0; color: var(--soft); }
+.get { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.get div { background: var(--panel); padding: 16px 18px; min-width: 0; }
+.get h3 { margin: 0 0 4px; font-size: 1rem; font-weight: 600; color: var(--fg); }
+.get p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.blind { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 14px; }
+.blind div { padding: 16px 18px; min-width: 0; }
+.blind h3 { margin: 0 0 6px; font-size: 1rem; color: var(--hot); font-weight: 600; }
+.blind p { margin: 0; color: var(--muted); font-size: 0.96rem; }
+.scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.scale div { padding: 14px 8px; text-align: center; border-right: 1px solid var(--line); background: var(--panel); }
+.scale div:last-child { border-right: 0; }
+.scale b { display: block; font-family: var(--display); font-style: italic; font-size: 2.1rem; line-height: 1; }
+.scale span { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.gA b { color: var(--ok); } .gB b { color: var(--gB); } .gC b { color: var(--warn); } .gD b { color: var(--gD); } .gF b { color: var(--low); }
+ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; max-width: 65ch; color: var(--soft); }
+.note { font-size: 0.92rem; color: var(--muted); border-left: 2px solid var(--acc); padding-left: 14px; margin: 0; max-width: 65ch; }
+.consent { padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+.consent dl { margin: 0; display: grid; grid-template-columns: minmax(0, 9rem) 1fr; gap: 8px 18px; }
+.consent dt { font-family: var(--mono); font-size: 0.85rem; color: var(--hot); padding-top: 2px; }
+.consent dd { margin: 0; color: var(--fg); min-width: 0; }
+.form { padding: 24px clamp(16px, 4vw, 28px); display: flex; flex-direction: column; gap: 22px; }
+.q { display: flex; flex-direction: column; gap: 8px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.q > label, .q > legend { font-weight: 600; color: var(--fg); padding: 0; line-height: 1.45; }
+.q .tag { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; margin-left: 8px; font-weight: 500; white-space: nowrap; }
+.q .tag.req { color: var(--hot); } .q .tag.opt { color: var(--muted); }
+.q .hint { color: var(--muted); font-size: 0.92rem; margin: 0; }
+.q input[type=text], .q textarea { width: 100%; background: #0a0613; color: var(--fg); border: 1px solid #2f1f50; border-radius: 3px; padding: 11px 12px; font: inherit; font-size: 1rem; }
+.q textarea { min-height: 72px; resize: vertical; }
+.q input[type=text]:focus, .q textarea:focus { border-color: var(--acc); outline: none; box-shadow: 0 0 0 1px var(--acc), 0 0 16px var(--glow); }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts label { display: inline-flex; align-items: center; gap: 8px; background: #0a0613; border: 1px solid #2f1f50; border-radius: 999px; padding: 7px 14px; cursor: pointer; font-size: 0.95rem; color: var(--fg); }
+.chip { font: inherit; font-size: 0.9rem; color: var(--fg); background: #0a0613; border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.chip:hover { border-color: var(--acc); box-shadow: 0 0 12px var(--glow); }
+.opts input { accent-color: var(--acc); margin: 0; }
+.opts label:has(input:checked) { border-color: var(--acc); background: var(--panel-2); box-shadow: 0 0 12px var(--glow); }
+.q.bad input[type=text], .q.bad .opts label { border-color: var(--low); }
+.err { color: var(--low); font-size: 0.92rem; margin: 0; }
+.form .btn { align-self: flex-start; cursor: pointer; font-family: inherit; }
+.out { display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--line); padding-top: 22px; }
+.out h3 { margin: 0; font-family: var(--display); font-style: italic; text-transform: uppercase; font-size: 1.4rem; color: var(--fg); }
+.out ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; color: var(--soft); }
+.out textarea { width: 100%; min-height: 160px; background: #0a0613; color: var(--fg); border: 1px solid #2f1f50; border-radius: 3px; padding: 12px; font-family: var(--mono); font-size: 0.82rem; resize: vertical; }
+.out .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.out .status { color: var(--ok); font-size: 0.95rem; }
+.warn { color: var(--warn); font-size: 0.92rem; margin: 0; }
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 24px; }
+a { color: var(--hot); }
+::selection { background: rgba(182, 107, 255, 0.45); color: #fff; }
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .banner { aspect-ratio: 16 / 8; }
+  .scale b { font-size: 1.6rem; }
+  .get { grid-template-columns: 1fr; }
+  .consent dl { grid-template-columns: 1fr; gap: 2px; }
+  .consent dd { margin-bottom: 10px; }
+  .btn { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+</head>
+<body>
+<main>
+  <header>
+    <img class="banner" src="ehpic_banner.jpg" alt="eH_PiC" width="1600" height="900">
+    <div class="hero">
+    <div class="eyebrow">eH_PiC · Path of Exile 2 build reviews</div>
+    <h1>Send in your build. Get it measured, fixed and graded.</h1>
+    <p class="lede">I load your exact build into Path of Building 2, the same calculator you use, find the changes that matter most within your budget, measure every one, and grade you against top players of your class and skill. Reviews happen live in the eH_PiC Discord and go up on YouTube.</p>
+    <div class="actions">
+      <a class="btn" href="#submit">Submit your build <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v11M5 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <span class="small">About 5 minutes. Three questions are required.</span>
+    </div>
+    </div>
+  </header>
+
+  <section aria-labelledby="ready-h">
+    <div class="eyebrow">Before you start</div>
+    <h2 id="ready-h">Have these ready</h2>
+    <ul class="ready">
+      <li><div><b>Your character name or PoB code</b><span>A public poe.ninja character name, a Path of Building code, or a pobb.in link.</span></div></li>
+      <li><div><b>A way to reach you</b><span>Your Discord name or an email, only for questions about your build.</span></div></li>
+      <li><div><b>Two screenshots</b><span class="opt">recommended</span><span>Your character sheet (the Defences part) and your main skill's tooltip, taken in town with no flasks or buffs running. You attach them to your Discord message.</span></div></li>
+      <li><div><b>Your budget</b><span>A total in divines or exalts (or unlimited), and the most you would spend on one item.</span></div></li>
+      <li><div><b>Whether you craft</b><span>Crafters also get a craft-it-yourself route for each item, using what they have in stock.</span></div></li>
+      <li><div><b>What must stay</b><span>Items, gems or passives you will not change, whatever the numbers say.</span></div></li>
+      <li><div><b>How you really play</b><span>Which buffs, charges, Rage and conditions are actually up in a fight. Calculators assume they always are.</span></div></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="flow-h">
+    <div class="eyebrow">What happens next</div>
+    <h2 id="flow-h">From the form to your results</h2>
+    <ol class="steps">
+      <li><p><strong>You fill in the form below and post it.</strong> The page turns your answers into one message. Copy it and paste it in the Discord channel where you found this link, with your screenshots.</p></li>
+      <li><p><strong>Maybe a few questions.</strong> If your build needs something the form did not ask, such as how often a trigger fires, I message you on the contact you gave.</p></li>
+      <li><p><strong>The review.</strong> Your build is checked, measured and priced. If my numbers do not match your own PoB or your screenshots, I find out why before anything is published.</p></li>
+      <li><p><strong>A live session.</strong> I reach out to schedule a voice session in the Discord where we go through your build together: what works, what holds you back and exactly what to change. You also get a written reply with the fixes and a PoB code of your build with them applied.</p></li>
+      <li><p><strong>The follow-up.</strong> Apply what you like and send a fresh PoB, or keep your character public. A later check shows whether your numbers moved the way the review said.</p></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="get-h">
+    <div class="eyebrow">What you get</div>
+    <h2 id="get-h">Your review</h2>
+    <div class="get">
+      <div><h3>A report card</h3><p>Damage and defence graded against players of your class and main skill, plus your weakest spots.</p></div>
+      <div><h3>Ranked fixes</h3><p>Each change measured on its own, with its price and the gain per divine spent.</p></div>
+      <div><h3>Your fixed build</h3><p>Every chosen fix applied together, gear, gems and tree, as a PoB code you can open.</p></div>
+      <div><h3>What kills you</h3><p>The biggest single hit you can take per damage type, before and after.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="method-h">
+    <div class="eyebrow">The method</div>
+    <h2 id="method-h">How the numbers are made</h2>
+    <ol class="steps">
+      <li><p><strong>Your build, unchanged.</strong> It is loaded from poe.ninja or from the PoB code you sent, on an unmodified copy of Path of Building 2.</p></li>
+      <li><p><strong>Checked against your own PoB.</strong> The review first confirms it reproduces the numbers saved in your PoB. If it does not, because of a different PoB version or a setting your export did not carry, the review stops until the difference is understood.</p></li>
+      <li><p><strong>Checked against your character sheet.</strong> Life, energy shield, resistances and Spirit from your screenshots are compared with the calculator's. A mismatch blocks the review until it is explained.</p></li>
+      <li><p><strong>One change at a time.</strong> Each suggested fix is measured on its own against your current build.</p></li>
+      <li><p><strong>Then everything together.</strong> The headline result applies every featured fix to one copy of your build and measures them at once, because single gains do not simply add up.</p></li>
+    </ol>
+    <p class="note">Prices are asking prices on the date shown, from the trade site and poe.ninja's currency exchange. They are not sales, and they move every day.</p>
+  </section>
+
+  <section aria-labelledby="blind-h">
+    <div class="eyebrow">Blind spots</div>
+    <h2 id="blind-h">What a calculator cannot see</h2>
+    <div class="blind">
+      <div><h3>How often a condition is true</h3><p>PoB lets a build assume "enemy is chilled", "you crit recently" or "you are moving". The review lists every such assumption with what it is worth, shows a damage range from none of them to all of them, and asks which are real for you.</p></div>
+      <div><h3>Triggered and meta skills</h3><p>How often Cast on Block, Cast on Critical and similar fire depends on how you play. Without a rate from you, a triggered skill's damage is not trusted.</p></div>
+      <div><h3>Flasks and charms</h3><p>PoB counts their effects as always active. Mods that need an active charm are left out of suggestions for that reason.</p></div>
+      <div><h3>Ground effects and clear speed</h3><p>Area damage over time, on-kill effects and how fast a map gets cleared are mostly outside what the calculator measures. The numbers are single-target damage and effective health.</p></div>
+      <div><h3>Several minion types</h3><p>Each minion skill is measured on its own. The real total is closer to their sum.</p></div>
+      <div><h3>Lines PoB cannot read</h3><p>Some uniques, Idol bonds and newer mechanics have lines PoB ignores. They are listed in every review and never suggested for removal, because the calculator cannot know what they are worth.</p></div>
+    </div>
+    <p class="note">Effective health moves a lot with small changes, so treat it as a guide. The biggest single hit you can take per damage type is closer to what actually kills you.</p>
+  </section>
+
+  <section aria-labelledby="grade-h">
+    <div class="eyebrow">Ladder grades</div>
+    <h2 id="grade-h">Graded against players of your class and skill</h2>
+    <p>Damage and defence grades compare you with public characters of the same class and main skill on poe.ninja, using poe.ninja's own numbers for both sides. The grade is your share of the top players' median.</p>
+    <div class="scale" role="list" aria-label="Grade scale">
+      <div class="gA" role="listitem"><b>A</b><span>≥ 100%</span></div>
+      <div class="gB" role="listitem"><b>B</b><span>≥ 50%</span></div>
+      <div class="gC" role="listitem"><b>C</b><span>≥ 25%</span></div>
+      <div class="gD" role="listitem"><b>D</b><span>≥ 10%</span></div>
+      <div class="gF" role="listitem"><b>F</b><span>below</span></div>
+    </div>
+    <p class="note">poe.ninja only shows the top 100 characters by damage and by defence. Outside that, the review says "outside the top 100" instead of inventing a percentile.</p>
+  </section>
+
+  <section aria-labelledby="gear-h">
+    <div class="eyebrow">Suggested gear</div>
+    <h2 id="gear-h">What a suggested item means</h2>
+    <ul class="plain">
+      <li>A suggested item is the item you have plus the new line at a typical roll. One you buy or craft will differ a little.</li>
+      <li>Replacing one chosen line on a finished rare is usually not practical, so the review suggests buying a replacement and lists the craft only as an option.</li>
+      <li>Corrupted, fractured and mirrored items are respected: their locked lines are never suggested for change.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="consent-h">
+    <div class="eyebrow">Your build, your call</div>
+    <h2 id="consent-h">Consent and credit</h2>
+    <div class="consent">
+      <dl>
+        <dt>On video</dt><dd>Sessions are recorded and posted on YouTube; that is the trade for a free review. On the form you can ask to hide your name, leave your voice out, or keep it to Discord only (lower priority).</dd>
+        <dt>Credit</dt><dd>The name you give, or none at all.</dd>
+        <dt>Your contact</dt><dd>Used only for questions about your build and to send your results. Never shown.</dd>
+        <dt>Changed your mind</dt><dd>Message me on the contact you used, and your build will not be shown.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="submit" aria-labelledby="submit-h">
+    <div class="eyebrow">Submit</div>
+    <h2 id="submit-h">Send in your build</h2>
+    <p>Answer what you can. Nothing is sent from this page: it builds one message for you to paste in Discord. Your answers stay in this browser until you post them.</p>
+    <form class="form" id="sub-form" novalidate>
+      <div id="qs"></div>
+      <p class="err" id="sub-err" hidden></p>
+      <button class="btn" type="submit" id="make">Make my submission</button>
+      <div class="out" id="out" hidden>
+        <h3>Your submission is ready</h3>
+        <ol>
+          <li>Press <b>Copy</b>.</li>
+          <li>Open the Discord channel where you found this link and paste it as a message.</li>
+          <li>Attach your two screenshots to the same message, then send.</li>
+        </ol>
+        <p class="warn" id="long" hidden>Your PoB code is long, so Discord will offer to send the message as a file. That works: send it.</p>
+        <textarea id="block" readonly aria-label="Your submission"></textarea>
+        <div class="row">
+          <button class="btn" type="button" id="copy">Copy</button>
+          <button class="btn ghost" type="button" id="clear">Start over</button>
+          <span class="status" id="copied" role="status"></span>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <footer>Numbers are measurements in Path of Building 2 under the assumptions each review lists. They are not game data. Not affiliated with Grinding Gear Games.</footer>
+</main>
+
+<script>
+// Questions come from auditor/doctor/intake.py (`intake.py page` rewrites the line below).
+// @questions-begin
+const QUESTIONS = [{"key": "purpose", "text": "What is this build for? Pick the main one (a second is fine).", "kind": "choice", "options": ["mapping / clearing", "single-target bossing", "both", "league start / leveling", "hardcore survival", "other"], "optional": false}, {"key": "mainskill", "text": "Which skill (or minion) does most of your damage? Give the exact name as it appears in game. If your build is mainly defensive or a support build, say so.", "kind": "text", "options": [], "optional": false}, {"key": "pain", "text": "What bothers you most right now? Pick all that apply.", "kind": "multi", "options": ["I die too often", "damage is too low", "clear speed is too slow", "boss damage is too low", "I run out of mana or Spirit", "it feels clunky", "something else"], "optional": false}, {"key": "ingame", "text": "Please send two screenshots: your character sheet (the Defences part) and the tooltip of your main skill. Or type the numbers in this form: life 4500, energy shield 2000, ward 0, spirit 195/230 (used/total, as on the skill panel), fire 75 cold 75 lightning 75 chaos 20, tooltip dps 1.2m. Take them in town with no flasks or buffs running.", "kind": "text", "options": [], "optional": false}, {"key": "budget", "text": "Total budget for the whole upgrade, in a currency you know (e.g. 50 divine, 200 exalted). Say 'unlimited' if money is no object, or 'none' for free changes only.", "kind": "text", "options": [], "optional": false}, {"key": "perItem", "text": "Most you would spend on any single item or craft (e.g. '10 divine'). Say 'no limit' if any price is fine.", "kind": "text", "options": [], "optional": true}, {"key": "crafting", "text": "Do you craft your own gear?", "kind": "choice", "options": ["I buy everything", "I craft some of my gear", "I craft most of my own gear"], "optional": true}, {"key": "craftStock", "text": "If you craft: what do you have in stock (essences, omens, orbs, runes, spare bases, gems or jewels)?", "kind": "text", "options": [], "optional": true}, {"key": "keep", "text": "Which items, gems or passives must stay exactly as they are, whatever the numbers say (because you paid a lot, love them, or they are the point of the build)?", "kind": "text", "options": [], "optional": false}, {"key": "corrupted", "text": "Do you have corrupted items? May they be replaced if something is clearly better, or are they locked?", "kind": "choice", "options": ["none", "locked", "may replace", "some locked, some not (say which)"], "optional": true}, {"key": "respec", "text": "How many passive points can you respec, and are you willing to change gems and supports?", "kind": "text", "options": [], "optional": false}, {"key": "rage", "text": "If your build uses Rage: how much do you actually hold while fighting, and how do you get it? (a number, 'none', or 'no Rage')", "kind": "text", "options": [], "optional": true}, {"key": "conditions", "text": "Calculators often assume conditions are always true. Which of these are NOT up most of the time in real play? Write 'boss only' beside any that only happen in boss fights: you were hit recently, you crit recently, enemy ignited / chilled / shocked / frozen / bleeding / poisoned / dazed / stunned, enemy intimidated, enemy withered, you killed recently, you are on full life.", "kind": "text", "options": [], "optional": false}, {"key": "charges", "text": "Which charges do you actually keep up: Frenzy, Power, Endurance? (list, or 'none')", "kind": "text", "options": [], "optional": true}, {"key": "triggers", "text": "Do you use triggered or meta skills (a spell fired by another skill, e.g. Cast on Block, Cast on Critical)? Which spells, and how often do they fire in real play? (e.g. 'Spark about 2 times a second', 'once every 3 seconds')", "kind": "text", "options": [], "optional": true}, {"key": "weaponsets", "text": "Do you swap weapon sets? Which set for bossing and which for clearing?", "kind": "text", "options": [], "optional": true}, {"key": "consent", "text": "Coaching sessions are recorded and posted on YouTube. How may yours be shared?", "kind": "choice", "options": ["Yes: YouTube and Discord", "Yes, but hide my name", "Yes, but leave my voice out", "Discord only, not YouTube (lower priority)", "No, just the written review"], "optional": false}, {"key": "credit", "text": "What name should I use for credit (or 'anonymous')?", "kind": "text", "options": [], "optional": false}];
+// @questions-end
+const FIRST = [
+  { key: "build", text: "Your character name on poe.ninja, or your Path of Building code / pobb.in link", kind: "line", required: true },
+  { key: "contact", text: "Your Discord name (or email), for questions about your build", kind: "line", required: true }
+];
+const SHOTS = { key: "screenshots", text: "Screenshot links, if you would rather link them than attach them (Imgur, Discord, ...)", kind: "text", optional: true };
+const QUICK = { budget: ["Unlimited", "None (free changes only)"], perItem: ["No limit"] };
+const START = "=== BUILD DOCTOR SUBMISSION v1 ===", END = "=== END ===";
+const all = FIRST.concat(QUESTIONS.flatMap(function (q) { return q.key === "ingame" ? [q, SHOTS] : [q]; }));
+const required = function (q) { return q.required || q.key === "consent"; };
+const box = document.getElementById("qs");
+const STORE = "bd-draft-v1";
+let draft = {};
+try { draft = JSON.parse(localStorage.getItem(STORE) || "{}") || {}; } catch (e) { draft = {}; }
+
+function el(tag, attrs, text) {
+  const n = document.createElement(tag);
+  Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+  if (text) n.textContent = text;
+  return n;
+}
+function tagFor(q) {
+  if (required(q)) return el("span", { class: "tag req" }, "required");
+  if (q.optional) return el("span", { class: "tag opt" }, "skip if it does not apply");
+  return null;
+}
+all.forEach(function (q) {
+  const id = "q-" + q.key;
+  if (q.kind === "choice" || q.kind === "multi") {
+    const fs = el("fieldset", { class: "q", id: id });
+    const lg = el("legend", {}, q.text); const t = tagFor(q); if (t) lg.appendChild(t); fs.appendChild(lg);
+    const opts = el("div", { class: "opts" });
+    q.options.forEach(function (o, i) {
+      const lab = el("label", {});
+      const inp = el("input", { type: q.kind === "choice" ? "radio" : "checkbox", name: q.key, value: o, id: id + "-" + i });
+      const saved = draft[q.key];
+      if (saved && (q.kind === "choice" ? saved === o : saved.split(", ").indexOf(o) >= 0)) inp.checked = true;
+      lab.appendChild(inp); lab.appendChild(document.createTextNode(o)); opts.appendChild(lab);
+    });
+    fs.appendChild(opts); box.appendChild(fs);
+  } else {
+    const wrap = el("div", { class: "q", id: id });
+    const lab = el("label", { for: id + "-in" }, q.text); const t = tagFor(q); if (t) lab.appendChild(t); wrap.appendChild(lab);
+    const inp = q.kind === "line" ? el("input", { type: "text", id: id + "-in", name: q.key, autocomplete: "off" }) : el("textarea", { id: id + "-in", name: q.key, rows: "2" });
+    if (draft[q.key]) inp.value = draft[q.key];
+    wrap.appendChild(inp);
+    if (QUICK[q.key]) {
+      const row = el("div", { class: "opts quick" });
+      QUICK[q.key].forEach(function (o) {
+        const b = el("button", { type: "button", class: "chip" }, o);
+        b.addEventListener("click", function () { inp.value = o; saveDraft(); inp.focus(); });
+        row.appendChild(b);
+      });
+      wrap.appendChild(row);
+    }
+    if (q.key === "build") wrap.appendChild(el("p", { class: "hint" }, "A very long PoB code? Put it on pobb.in and paste the short link here instead."));
+    box.appendChild(wrap);
+  }
+});
+box.style.display = "flex"; box.style.flexDirection = "column"; box.style.gap = "22px";
+
+function value(q) {
+  if (q.kind === "choice") { const c = document.querySelector('input[name="' + q.key + '"]:checked'); return c ? c.value : ""; }
+  if (q.kind === "multi") return Array.prototype.map.call(document.querySelectorAll('input[name="' + q.key + '"]:checked'), function (c) { return c.value; }).join(", ");
+  return document.getElementById("q-" + q.key + "-in").value.trim();
+}
+function saveDraft() {
+  const d = {}; all.forEach(function (q) { const v = value(q); if (v) d[q.key] = v; });
+  try { localStorage.setItem(STORE, JSON.stringify(d)); } catch (e) {}
+}
+document.getElementById("sub-form").addEventListener("input", saveDraft);
+document.getElementById("sub-form").addEventListener("change", saveDraft);
+
+document.getElementById("sub-form").addEventListener("submit", function (ev) {
+  ev.preventDefault();
+  const err = document.getElementById("sub-err");
+  let missing = [];
+  all.forEach(function (q) {
+    const node = document.getElementById("q-" + q.key);
+    const bad = required(q) && !value(q);
+    node.classList.toggle("bad", bad);
+    if (bad) missing.push(q);
+  });
+  if (missing.length) {
+    err.textContent = "Please answer the required question" + (missing.length > 1 ? "s" : "") + " marked in red.";
+    err.hidden = false;
+    document.getElementById("q-" + missing[0].key).scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById("out").hidden = true;
+    return;
+  }
+  err.hidden = true;
+  const lines = [START, "submitted: " + new Date().toISOString().slice(0, 16) + "Z"];
+  all.forEach(function (q) {
+    const v = value(q).replace(/\s*\n\s*/g, " | ");
+    if (v) lines.push(q.key + ": " + v);
+  });
+  lines.push(END);
+  const text = lines.join("\n");
+  document.getElementById("block").value = text;
+  document.getElementById("long").hidden = text.length <= 1900;
+  document.getElementById("copied").textContent = "";
+  const out = document.getElementById("out");
+  out.hidden = false;
+  out.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+document.getElementById("copy").addEventListener("click", function () {
+  const ta = document.getElementById("block");
+  const done = function () { document.getElementById("copied").textContent = "Copied. Now paste it in Discord."; };
+  const fallback = function () { ta.focus(); ta.select(); document.getElementById("copied").textContent = "Selected. Press Ctrl+C (or Cmd+C) to copy."; };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done, fallback);
+    else fallback();
+  } catch (e) { fallback(); }
+});
+document.getElementById("clear").addEventListener("click", function () {
+  document.getElementById("sub-form").reset();
+  Array.prototype.forEach.call(document.querySelectorAll(".q textarea, .q input[type=text]"), function (n) { n.value = ""; });
+  try { localStorage.removeItem(STORE); } catch (e) {}
+  document.getElementById("out").hidden = true;
+  document.getElementById("q-build").scrollIntoView({ behavior: "smooth", block: "center" });
+});
+</script>
+</body>
+</html>
