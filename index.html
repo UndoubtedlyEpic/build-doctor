@@ -368,7 +368,6 @@ function one(name) { return checked(name)[0] || ""; }
 function head(wrap, text, q, hint) {
   const lg = el("div", { class: "qh" }, text);
   if (q.required || q.key === "consent") lg.appendChild(el("span", { class: "tag req" }, "required"));
-  else if (q.optional) lg.appendChild(el("span", { class: "tag opt" }, "skip if it does not apply"));
   wrap.appendChild(lg);
   if (hint) wrap.appendChild(el("p", { class: "hint" }, hint));
 }
