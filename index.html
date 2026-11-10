@@ -450,7 +450,7 @@ const STRUCTURED = {
       CONDS.forEach(function (c, i) {
         const v = one("cond-" + i);
         if (v === "Rarely up") p.push(c);
-        else if (v === "Boss only") p.push(c + " boss only");
+        else if (v === "Boss only") p.push(c + " (boss only)");
       });
       return withDetails(p.join(", "), "conditions-more");
     }
@@ -604,6 +604,37 @@ document.querySelectorAll('#sub-form input[type=radio]:checked').forEach(functio
 document.getElementById("sub-form").addEventListener("input", saveDraft);
 document.getElementById("sub-form").addEventListener("change", saveDraft);
 
+// The post the player pastes in Discord: a heading, short sections with bold labels, a long PoB code in a code box at
+// the end, and a small footer. intake.py reads it back by these labels (LABELS there must match).
+const LABELS = { build: "Build", mainskill: "Main skill", purpose: "Purpose", pain: "Problems", budget: "Budget",
+  perItem: "Per item", crafting: "Crafting", craftStock: "In stock", corrupted: "Corrupted items", keep: "Keep as is",
+  charges: "Charges", rage: "Rage", triggers: "Triggers", weaponsets: "Weapon sets", conditions: "Rarely up",
+  respec: "Respec", ingame: "Numbers", screenshots: "Screenshot links", consent: "Sharing", credit: "Credit",
+  contact: "Contact" };
+const SECTIONS = [
+  ["\ud83c\udfaf Build", ["build", "mainskill", "purpose", "pain"]],
+  ["\ud83d\udcb0 Budget", ["budget", "perItem", "crafting", "craftStock", "corrupted", "keep"]],
+  ["\u2694\ufe0f How I play", ["charges", "rage", "triggers", "weaponsets", "conditions", "respec"]],
+  ["\ud83d\udcca Numbers", ["ingame", "screenshots"]],
+  ["\ud83d\udce3 Sharing", ["consent", "credit", "contact"]]
+];
+function discordPost() {
+  const v = {};
+  all.forEach(function (q) { const x = value(q).replace(/\s*\n\s*/g, " | "); if (x) v[q.key] = x; });
+  let code = "";
+  if (v.build && v.build.length > 120 && !/\s/.test(v.build)) { code = v.build; v.build = "PoB code below"; }
+  const out = ["## \ud83e\ude7a Build Doctor submission"];
+  SECTIONS.forEach(function (sec) {
+    const rows = sec[1].filter(function (k) { return v[k]; });
+    if (!rows.length) return;
+    out.push("", "**" + sec[0] + "**");
+    rows.forEach(function (k) { out.push("> **" + LABELS[k] + ":** " + v[k]); });
+  });
+  if (code) out.push("", "```", code, "```");
+  out.push("-# eH_PiC Build Doctor \u00b7 v2 \u00b7 " + new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC");
+  return out.join("\n");
+}
+
 const required = function (q) { return q.required || q.key === "consent"; };
 document.getElementById("sub-form").addEventListener("submit", function (ev) {
   ev.preventDefault();
@@ -622,13 +653,7 @@ document.getElementById("sub-form").addEventListener("submit", function (ev) {
     return;
   }
   err.hidden = true;
-  const lines = [START, "submitted: " + new Date().toISOString().slice(0, 16) + "Z"];
-  all.forEach(function (q) {
-    const v = value(q).replace(/\s*\n\s*/g, " | ");
-    if (v) lines.push(q.key + ": " + v);
-  });
-  lines.push(END);
-  const text = lines.join("\n");
+  const text = discordPost();
   byId("block").value = text;
   byId("long").hidden = text.length <= 1900;
   byId("copied").textContent = "";
